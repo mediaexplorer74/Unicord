@@ -4,12 +4,10 @@ My fork of famous Discord client :)
 ## About
 A free, open source Discord Client for Windows 10 and Windows 10 Mobile, that tries to provide a fast, efficient, native feeling Discord experience, while adding handy extras along the way. Built on [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/)!
 
-## Screenshot
+## Screenshot(s)
 ![Win11](Images/shot01.png)
 
 [![Build Status](https://dev.azure.com/WanKerrCoLtd/Unicord/_apis/build/status/WamWooWam.Unicord?branchName=master)](https://dev.azure.com/WanKerrCoLtd/Unicord/_build/latest?definitionId=4&branchName=master)
-
-![promo](https://raw.githubusercontent.com/WamWooWam/Unicord/master/Assets/promo1.png)
 
 ## Getting Started
 So you wanna build Unicord, well you're gonna need to have a few things handy.
