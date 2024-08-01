@@ -207,8 +207,6 @@ namespace Unicord.Universal.Controls
                     renderer.Channel = Channel;
                     renderer.ColourBrushConverter = ColourBrushConverter;
                     renderer.IsSystemMessage = IsSystemMessage;
-                    renderer.CodeCornerRadius = CodeCornerRadius;
-                    renderer.InlineCodeCornerRadius = InlineCodeCornerRadius;
 
                     _rootElement.Child = renderer.Render();
                 }

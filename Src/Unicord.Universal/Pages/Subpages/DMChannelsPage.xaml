@@ -34,13 +34,12 @@
 
         <Grid Height="42">
             <TextBlock
-                Margin="16,0,8,0"
+                Margin="16,0"
                 VerticalAlignment="Center"
-                Style="{ThemeResource SubtitleTextBlockStyle}"
-                FontFamily="Segoe UI Variable Display"
-                TextTrimming="Clip"
-                TextWrapping="NoWrap"
-                Text="{Binding Tag, ElementName=Self}"/>
+                FontSize="18"
+                FontWeight="SemiBold"
+                Text="{Binding Tag, ElementName=Self}"
+                TextTrimming="CharacterEllipsis" />
         </Grid>
 
         <controls:SidebarSearchBox Grid.Row="1" />
@@ -60,7 +59,7 @@
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
+                <Style TargetType="ListViewItem">
                     <Style.Setters>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                         <Setter Property="VerticalContentAlignment" Value="Stretch" />

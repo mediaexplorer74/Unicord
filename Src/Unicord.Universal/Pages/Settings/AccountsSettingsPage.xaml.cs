@@ -28,6 +28,8 @@ namespace Unicord.Universal.Pages.Settings
         private async void SyncContactsSwitch_Toggled(object sender, RoutedEventArgs e)
         {
             syncContactsSwitch.IsEnabled = false;
+            syncingProgressBar.Visibility = Visibility.Visible;
+            syncingProgressBar.IsIndeterminate = true;
 
             var isEnabled = App.RoamingSettings.Read(SYNC_CONTACTS, true);
             if (isEnabled)
@@ -42,6 +44,8 @@ namespace Unicord.Universal.Pages.Settings
             App.RoamingSettings.Save(SYNC_CONTACTS, !isEnabled);
 
             syncContactsSwitch.IsEnabled = true;
+            syncingProgressBar.Visibility = Visibility.Collapsed;
+            syncingProgressBar.IsIndeterminate = false;
         }
 
         private async void LogoutButton_Click(object sender, RoutedEventArgs e)
@@ -76,11 +80,9 @@ namespace Unicord.Universal.Pages.Settings
 
         private string GetHiddenEmail(string email)
         {
-            var split = email.Split('@');
-            var start = split[0].TrimEnd('@');
-            var domain = split[1];
+            string domain = email.Split('@')[1];
 
-            return $"{new string('●', start.Length)}@{domain}";
+            return $"*****@{domain}";
         }
     }
 }

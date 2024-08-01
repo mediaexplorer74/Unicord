@@ -1,17 +1,10 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
-using Microsoft.Toolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Unicord.Universal.Controls.Messages;
-using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
-using Windows.Management.Deployment;
-using Windows.System;
 using Windows.UI.Xaml;
 using static Unicord.Constants;
 
@@ -24,32 +17,60 @@ namespace Unicord.Universal.Models
         public DiscordMessage ExampleMessage { get; set; }
     }
 
-    public class TimestampStyleModel
-    {
-        public TimestampStyleModel(TimestampStyle style, DateTime timestamp)
-        {
-            Style = style;
-            Timestamp = timestamp;
-        }
-
-        public TimestampStyle Style { get; set; }
-        public DateTime Timestamp { get; set; }
-    }
-
     class MessagingSettingsModel : NotifyPropertyChangeImpl
     {
-        private bool _canUseWebp = false;
-
-        private const string WEBP_IMAGE_EXTENSIONS_PRODUCTID = "9PG2DK419DRG";
-        private const string WEBP_IMAGE_EXTENSIONS_PACKAGEFAMILYNAME = "Microsoft.WebpImageExtension_8wekyb3d8bbwe";
-
-        private static Uri WebPStoreUri = new Uri($"ms-windows-store://pdp/?ProductId={WEBP_IMAGE_EXTENSIONS_PRODUCTID}");
-
         public MessagingSettingsModel()
         {
-            CanUseWebP = Tools.HasWebPSupport();
-            OpenWebPStoreLinkCommand = new AsyncRelayCommand(async () => await Launcher.LaunchUriAsync(WebPStoreUri));
-        } 
+            AvailableMessageStyles = new ObservableCollection<MessageStyle>();
+            FindMessageStyles(App.Current.Resources, AvailableMessageStyles);
+            RegenerateMessage();
+        }
+
+        internal void RegenerateMessage()
+        {
+            var user = App.Discord.CreateMockUser("ExampleUser", "ABCD");
+            var channel = App.Discord.CreateMockChannel("text", ChannelType.Text, "This is an example channel.");
+            ExampleMessage = App.Discord.CreateMockMessage("This is an example message!", user, channel, DateTime.Now.Subtract(TimeSpan.FromMinutes(3)));
+        }
+
+        private void FindMessageStyles(ResourceDictionary baseDict, IList<MessageStyle> availableMesssageStyles)
+        {
+            foreach (var dict in baseDict.MergedDictionaries)
+            {
+                FindMessageStyles(dict, availableMesssageStyles);
+            }
+
+            foreach (var resource in baseDict)
+            {
+                if (resource.Value is Style s && s.TargetType == typeof(MessageControl))
+                {
+                    availableMesssageStyles.Add(new MessageStyle() { Key = resource.Key.ToString(), Value = s, ExampleMessage = ExampleMessage });
+                }
+            }
+        }
+
+        public DiscordMessage ExampleMessage { get; set; }
+
+        public MessageStyle SelectedMessageStyle
+        {
+            get
+            {
+                var key = App.LocalSettings.Read(MESSAGE_STYLE_KEY, MESSAGE_STYLE_DEFAULT);
+                var style = AvailableMessageStyles.FirstOrDefault(s => s.Key == key);
+                if (style == null) // additional validation to make sure the style exists
+                {
+                    // if this doesn't work something's fucked big time
+                    App.LocalSettings.Save(MESSAGE_STYLE_KEY, MESSAGE_STYLE_DEFAULT);
+                    style = AvailableMessageStyles.FirstOrDefault(s => s.Key == MESSAGE_STYLE_DEFAULT);
+                }
+
+                return style;
+            }
+
+            set => App.LocalSettings.Save(MESSAGE_STYLE_KEY, value.Key);
+        }
+
+        public ObservableCollection<MessageStyle> AvailableMessageStyles { get; set; }
 
         public bool EnableSpoilers
         {
@@ -62,13 +83,6 @@ namespace Unicord.Universal.Models
             get => (int)App.RoamingSettings.Read(TIMESTAMP_STYLE, Unicord.TimestampStyle.Absolute);
             set => App.RoamingSettings.Save(TIMESTAMP_STYLE, (TimestampStyle)value);
         }
-
-        public TimestampStyleModel[] TimestampStyles { get; } = new[]
-        {
-            new TimestampStyleModel(Unicord.TimestampStyle.Relative, DateTime.Now.AddMinutes(-3)),
-            new TimestampStyleModel(Unicord.TimestampStyle.Absolute, DateTime.Now.AddMinutes(-3)),
-            new TimestampStyleModel(Unicord.TimestampStyle.Both, DateTime.Now.AddMinutes(-3)),
-        };
 
         public bool AutoPlayGifs
         {
@@ -105,14 +119,5 @@ namespace Unicord.Universal.Models
             get => App.RoamingSettings.Read(MINIMUM_CONTRAST, MINIMUM_CONTRAST_DEFAULT);
             set => App.RoamingSettings.Save(MINIMUM_CONTRAST, value);
         }
-
-        public bool EnableWebP
-        {
-            get => App.LocalSettings.Read(ENABLE_WEBP, ENABLE_WEBP_DEFAULT);
-            set => App.LocalSettings.Save(ENABLE_WEBP, value);
-        }
-
-        public bool CanUseWebP { get; }
-        public ICommand OpenWebPStoreLinkCommand { get; }
     }
 }

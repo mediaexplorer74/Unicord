@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Unicord.Universal")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Unicord")]
+[assembly: AssemblyDescription("A Discord Client for UWP")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Unicord.Universal")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCompany("Wan Kerr Co. Ltd.")]
+[assembly: AssemblyProduct("Unicord")]
+[assembly: AssemblyCopyright("Copyright © Wan Kerr Co. Ltd. 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

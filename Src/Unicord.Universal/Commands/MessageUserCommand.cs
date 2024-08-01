@@ -64,7 +64,7 @@ namespace Unicord.Universal.Commands
                     var page = Window.Current.Content.FindChild<MainPage>();
                     if (page != null)
                     {
-                        page.HideUserOverlay();
+                        page.HideOverlay();
 
                         var service = DiscordNavigationService.GetForCurrentView();
                         await service.NavigateAsync(channel);

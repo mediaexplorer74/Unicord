@@ -37,7 +37,7 @@ namespace Unicord.Universal.Pages.Subpages
             var channel = e.AddedItems.FirstOrDefault() as DiscordChannel;
             if (channel != null)
             {
-                if (channel.Type != ChannelType.Text && channel.Type != ChannelType.Announcement)
+                if (channel.Type != ChannelType.Text && channel.Type != ChannelType.News)
                 {
                     channelsList.SelectedItem = e.RemovedItems.FirstOrDefault();
 

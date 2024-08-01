@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -42,20 +41,6 @@ namespace Unicord.Universal
         public MainPage()
         {
             InitializeComponent();
-
-#if DEBUG
-            this.AddAccelerator(Windows.System.VirtualKey.C, Windows.System.VirtualKeyModifiers.Control | Windows.System.VirtualKeyModifiers.Shift, (_, _) =>
-            {
-                if (IsOverlayShown)
-                {
-                    HideConnectingOverlay();
-                }
-                else
-                {
-                    ShowConnectingOverlay();
-                }
-            });
-#endif
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -81,7 +66,7 @@ namespace Unicord.Universal
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowingService.Current.HandleTitleBarForWindow(TitleBar, this);
+            WindowingService.Current.HandleTitleBarForWindow(titleBar, this);
 
             //var engagementManager = StoreServicesEngagementManager.GetDefault();
             //await engagementManager.RegisterNotificationChannelAsync();
@@ -93,12 +78,6 @@ namespace Unicord.Universal
             var navigation = SystemNavigationManager.GetForCurrentView();
             navigation.BackRequested += Navigation_BackRequested;
 
-            if (Arguments?.SplashScreen != null)
-            {
-                PositionSplash(Arguments.SplashScreen);
-                Window.Current.SizeChanged += OnSplashResize;
-            }
-
             try
             {
                 var vault = new PasswordVault();
@@ -106,18 +85,15 @@ namespace Unicord.Universal
 
                 if (result != null)
                 {
-                    ConnectingOverlay.Visibility = Visibility.Visible;
-                    ConnectingOverlay.Opacity = 1;
-                    ContentRoot.Opacity = 0;
-                    ConnectingScale.ScaleX = 1;
-                    ConnectingScale.ScaleY = 1;
-                    MainScale.ScaleX = 0.85;
-                    MainScale.ScaleY = 0.85;
+                    connectingOverlay.Visibility = Visibility.Visible;
+                    connectingOverlay.Opacity = 1;
+                    connectingScale.ScaleX = 1;
+                    connectingScale.ScaleY = 1;
+                    mainScale.ScaleX = 0.85;
+                    mainScale.ScaleY = 0.85;
 
                     IsOverlayShown = true;
-                    ConnectingProgress.IsIndeterminate = true;
-                    if (ConnectingProgress1 != null)
-                        ConnectingProgress1.IsActive = true;
+                    connectingProgress.IsIndeterminate = true;
 
                     result.RetrievePassword();
 
@@ -136,23 +112,6 @@ namespace Unicord.Universal
             }
         }
 
-        private void OnSplashResize(object sender, WindowSizeChangedEventArgs e)
-        {
-            PositionSplash(Arguments.SplashScreen);
-        }
-
-        private void PositionSplash(Windows.ApplicationModel.Activation.SplashScreen splash)
-        {
-            var imageRect = splash.ImageLocation;
-            ExtendedSplashImage.SetValue(Canvas.LeftProperty, imageRect.X);
-            ExtendedSplashImage.SetValue(Canvas.TopProperty, imageRect.Y);
-            ExtendedSplashImage.Height = imageRect.Height;
-            ExtendedSplashImage.Width = imageRect.Width;
-
-            ConnectingProgress.SetValue(Canvas.LeftProperty, imageRect.X + (imageRect.Width * 0.5) - (ConnectingProgress.Width * 0.5));
-            ConnectingProgress.SetValue(Canvas.TopProperty, imageRect.Y + imageRect.Height + imageRect.Height * 0.1);
-        }
-
         private void RemoveEventHandlers()
         {
             var pane = InputPane.GetForCurrentView();
@@ -161,6 +120,14 @@ namespace Unicord.Universal
 
             var navigation = SystemNavigationManager.GetForCurrentView();
             navigation.BackRequested -= Navigation_BackRequested;
+
+            if (App.Discord != null)
+            {
+                App.Discord.Ready -= OnDiscordReady;
+                App.Discord.Resumed -= OnDiscordResumed;
+                App.Discord.SocketClosed -= OnDiscordDisconnected;
+                App.Discord.LoggedOut -= OnLoggedOut;
+            }
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -234,7 +201,6 @@ namespace Unicord.Universal
             }
         }
 
-        
         private Task OnLoggedOut()
         {
             _isReady = false;
@@ -243,11 +209,6 @@ namespace Unicord.Universal
         }
 
         private async Task OnDiscordReady(ReadyEventArgs e)
-        {
-            await HideDisconnectingMessage();
-        }
-
-        private async Task OnDiscordResumed(ResumedEventArgs e)
         {
             await HideDisconnectingMessage();
         }
@@ -324,12 +285,10 @@ namespace Unicord.Universal
             if (IsOverlayShown)
                 return;
 
-            ConnectingOverlay.Visibility = Visibility.Visible;
-            ConnectingProgress.IsIndeterminate = true;
-            if (ConnectingProgress1 != null)
-                ConnectingProgress1.IsActive = true;
+            connectingOverlay.Visibility = Visibility.Visible;
+            connectingProgress.IsIndeterminate = true;
             IsOverlayShown = true;
-            ShowConnecting.Begin();
+            showConnecting.Begin();
         }
 
         internal void HideConnectingOverlay()
@@ -342,10 +301,8 @@ namespace Unicord.Universal
 
         private void hideConnecting_Completed(object sender, object e)
         {
-            ConnectingOverlay.Visibility = Visibility.Collapsed;
-            ConnectingProgress.IsIndeterminate = false;
-            if (ConnectingProgress1 != null)
-                ConnectingProgress1.IsActive = false;
+            connectingOverlay.Visibility = Visibility.Collapsed;
+            connectingProgress.IsIndeterminate = true;
             IsOverlayShown = false;
         }
 
@@ -354,12 +311,102 @@ namespace Unicord.Universal
             rootFrame.Navigate(type);
         }
 
-        public void HideUserOverlay()
+        internal void ShowAttachmentOverlay(Uri url, int width, int height, RoutedEventHandler openHandler, RoutedEventHandler saveHandler, RoutedEventHandler shareHandler)
         {
+            if (attachmentImage.Source == null)
+            {
+                contentContainerOverlay.Visibility = Visibility.Visible;
+                subText.Visibility = Visibility.Visible;
+                contentOverlay.Visibility = Visibility.Visible;
+                showContent.Begin();
+
+                _openHandler = openHandler;
+                _saveHandler = saveHandler;
+                _shareHandler = shareHandler;
+                openButton.Click += _openHandler;
+                saveButton.Click += _saveHandler;
+                shareButton.Click += _shareHandler;
+
+                scaledControl.TargetWidth = width;
+                scaledControl.TargetHeight = height;
+                attachmentImage.MaxWidth = width;
+                attachmentImage.MaxHeight = height;
+
+                if ((attachmentImage.Source as BitmapImage)?.UriSource != url)
+                {
+                    var src = new BitmapImage();
+                    attachmentImage.Source = src;
+
+                    overlayProgressRing.Value = 0;
+                    contentContainerOverlay.Visibility = Visibility.Visible;
+
+                    var p = new Progress<int>(e => overlayProgressRing.Value = e);
+                    var handler = new DownloadProgressEventHandler((o, e) => ((IProgress<int>)p).Report(e.Progress));
+
+                    src.DownloadProgress += handler;
+                    src.ImageOpened += (o, e) =>
+                    {
+                        contentContainerOverlay.Visibility = Visibility.Collapsed;
+                        src.DownloadProgress -= handler;
+                    };
+
+                    src.UriSource = url;
+                }
+            }
+            else
+            {
+                ResetOverlay();
+                ShowAttachmentOverlay(url, width, height, openHandler, saveHandler, shareHandler);
+            }
+        }
+
+        public void HideOverlay()
+        {
+            if (contentOverlay.Visibility == Visibility.Visible)
+            {
+                hideContent.Begin();
+            }
+
             if (userInfoOverlay.Visibility == Visibility.Visible)
             {
                 hideUserOverlay.Begin();
             }
+        }
+
+        private void ResetOverlay()
+        {
+            contentOverlay.Visibility = Visibility.Collapsed;
+
+            if (_openHandler != null)
+            {
+                openButton.Click -= _openHandler;
+            }
+
+            if (_saveHandler != null)
+            {
+                saveButton.Click -= _saveHandler;
+            }
+
+            if (_shareHandler != null)
+            {
+                shareButton.Click -= _shareHandler;
+            }
+
+            _openHandler = null;
+            _saveHandler = null;
+            _shareHandler = null;
+
+            attachmentImage.Source = null;
+        }
+
+        private void hideContent_Completed(object sender, object e)
+        {
+            ResetOverlay();
+        }
+
+        private void contentOverlay_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            HideOverlay();
         }
 
         private void hideUserOverlay_Completed(object sender, object e)
@@ -375,18 +422,24 @@ namespace Unicord.Universal
 
         private void Pane_Showing(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            Everything.Margin = new Thickness(0, 0, 0, args.OccludedRect.Height);
+            everything.Margin = new Thickness(0, 0, 0, args.OccludedRect.Height);
             args.EnsuredFocusedElementInView = true;
         }
 
         private void Pane_Hiding(InputPane sender, InputPaneVisibilityEventArgs args)
         {
-            Everything.Margin = new Thickness(0);
+            everything.Margin = new Thickness(0);
             args.EnsuredFocusedElementInView = true;
         }
 
         private void Navigation_BackRequested(object sender, BackRequestedEventArgs e)
         {
+            if (contentOverlay.Visibility == Visibility.Visible)
+            {
+                e.Handled = true;
+                hideContent.Begin();
+            }
+
             if (userInfoOverlay.Visibility == Visibility.Visible)
             {
                 e.Handled = true;
@@ -396,13 +449,19 @@ namespace Unicord.Universal
 
         public void ShowCustomOverlay()
         {
-            WindowingService.Current.HandleTitleBarForControl(CustomOverlayGrid);
+            CustomOverlayGrid.Visibility = Visibility.Visible;
             ShowOverlayStoryboard.Begin();
         }
 
         public void HideCustomOverlay()
         {
             HideOverlayStoryboard.Begin();
+        }
+
+
+        private void HideOverlayStoryboard_Completed(object sender, object e)
+        {
+            CustomOverlayGrid.Visibility = Visibility.Collapsed;
         }
     }
 }

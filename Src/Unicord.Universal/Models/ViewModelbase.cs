@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Unicord.Universal.Models
@@ -12,14 +11,8 @@ namespace Unicord.Universal.Models
     /// <summary>
     /// A non thread-safe version of <see cref="DSharpPlus.Entities.PropertyChangedBase"/> for view models and internal classes.
     /// </summary>
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase
     {
-        protected SynchronizationContext syncContext;
-        public ViewModelBase()
-        {
-            syncContext = SynchronizationContext.Current;
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Holy hell is the C# Discord great.
@@ -36,7 +29,7 @@ namespace Unicord.Universal.Models
         public virtual void InvokePropertyChanged([CallerMemberName] string property = null)
         {
             var args = new PropertyChangedEventArgs(property);
-            syncContext.Post((o) => PropertyChanged?.Invoke(this, args), null);
+            PropertyChanged?.Invoke(this, args);
         }
     }
 }

@@ -480,7 +480,7 @@ namespace Unicord.Universal.Controls.Markdown.Render
                     text.FontWeight = FontWeights.Bold;
                 }
 
-                if (localContext.WithinUnderline)
+                if(localContext.WithinUnderline)
                 {
                     text.TextDecorations = TextDecorations.Underline;
                 }
@@ -496,7 +496,6 @@ namespace Unicord.Universal.Controls.Markdown.Render
                     BorderThickness = borderthickness,
                     BorderBrush = InlineCodeBorderBrush,
                     Background = InlineCodeBackground,
-                    CornerRadius = InlineCodeCornerRadius,
                     Child = text,
                     Padding = padding,
                     Margin = margin
@@ -704,7 +703,7 @@ namespace Unicord.Universal.Controls.Markdown.Render
                         Emoji = DiscordEmoji.FromGuildEmote(App.Discord, element.Id, element.Text),
                         Size = size,
                         MaxWidth = size * 3,
-                        Margin = IsHuge ? default : new Thickness(0, 0, 0, -8)
+                        RenderTransform = IsHuge ? null : new TranslateTransform() { Y = 8 }
                     };
 
                     ToolTipService.SetToolTip(image, element.Text);
@@ -713,10 +712,10 @@ namespace Unicord.Universal.Controls.Markdown.Render
                     RootElement.Margin = new Thickness(0, 0, 0, 4);
                     localContext.InlineCollection.Add(ui);
 
-                    //if (!IsHuge && RootElement.RenderTransform is not TranslateTransform tt)
-                    //{
-                    //    RootElement.Margin = new Thickness(0, -8, 0, 0);
-                    //}
+                    if (!IsHuge && RootElement.RenderTransform is not TranslateTransform tt)
+                    {
+                        RootElement.Margin = new Thickness(0, -8, 0, 0);
+                    }
                 }
             }
         }

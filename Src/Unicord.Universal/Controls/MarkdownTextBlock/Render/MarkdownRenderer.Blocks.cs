@@ -331,18 +331,12 @@ namespace Unicord.Universal.Controls.Markdown.Render
             // Ensures that Code has Horizontal Scroll and doesn't wrap.
             var viewer = new ScrollViewer
             {
-                Padding = CodePadding,
-                Margin = CodeMargin,
-                Content = textBlock
-            };
-
-            var border = new Border()
-            {
                 Background = CodeBackground,
                 BorderBrush = CodeBorderBrush,
                 BorderThickness = CodeBorderThickness,
-                CornerRadius = CodeCornerRadius,
-                Child = viewer
+                Padding = CodePadding,
+                Margin = CodeMargin,
+                Content = textBlock
             };
 
             if (!WrapCodeBlock)
@@ -354,7 +348,7 @@ namespace Unicord.Universal.Controls.Markdown.Render
             }
 
             // Add it to the blocks
-            blockUIElementCollection.Add(border);
+            blockUIElementCollection.Add(viewer);
         }
 
         /// <summary>

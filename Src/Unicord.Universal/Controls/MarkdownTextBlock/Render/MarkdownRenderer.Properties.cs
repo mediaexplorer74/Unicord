@@ -231,10 +231,6 @@ namespace Unicord.Universal.Controls.Markdown.Render
 
         public bool IsSystemMessage { get; set; }
 
-        public CornerRadius CodeCornerRadius { get; set; }
-
-        public CornerRadius InlineCodeCornerRadius { get; set; }
-
         public ColourBrushConverter ColourBrushConverter { get; set; }
         public bool IsHuge { get; internal set; }
     }

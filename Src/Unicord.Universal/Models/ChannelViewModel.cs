@@ -3,7 +3,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Humanizer;
 using Microsoft.AppCenter.Analytics;
-using Microsoft.Toolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -11,8 +10,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Unicord.Universal.Models.Messages;
-using Unicord.Universal.Models.Messaging;
 using Unicord.Universal.Services;
 using Unicord.Universal.Utilities;
 using WamWooWam.Core;
@@ -42,7 +39,7 @@ namespace Unicord.Universal.Models
         private DispatcherTimer _slowModeTimer;
         private string _messageText;
         private bool _isTranscoding;
-        private ObservableCollection<MessageViewModel> _messages;
+        private ObservableCollection<DiscordMessage> _messages;
         private DiscordMessage _replyTo;
         private bool _replyPing = true;
 
@@ -60,13 +57,13 @@ namespace Unicord.Universal.Models
 
             _channel = channel;
             _currentUser = channel.Guild?.CurrentMember ?? App.Discord.CurrentUser;
-            _messages = new ObservableCollection<MessageViewModel>();
+            _messages = new ObservableCollection<DiscordMessage>();
 
-            WeakReferenceMessenger.Default.Register<ChannelViewModel, TypingStartEventArgs>(this, (t, v) => t.OnTypingStarted(v.Event));
-            WeakReferenceMessenger.Default.Register<ChannelViewModel, MessageCreateEventArgs>(this, (t, v) => t.OnMessageCreated(v.Event));
-            WeakReferenceMessenger.Default.Register<ChannelViewModel, MessageDeleteEventArgs>(this, (t, v) => t.OnMessageDeleted(v.Event));
-            WeakReferenceMessenger.Default.Register<ChannelViewModel, ChannelUpdateEventArgs>(this, (t, v) => t.OnChannelUpdated(v.Event));
-            WeakReferenceMessenger.Default.Register<ChannelViewModel, ResumedEventArgs>(this, (t, v) => t.OnResumed(v.Event));
+            App.Discord.TypingStarted += OnTypingStarted;
+            App.Discord.MessageCreated += OnMessageCreated;
+            App.Discord.MessageDeleted += OnMessageDeleted;
+            App.Discord.ChannelUpdated += OnChannelUpdated;
+            App.Discord.Resumed += OnResumed;
 
             TypingUsers = new ObservableCollection<DiscordUser>();
             FileUploads = new ObservableCollection<FileUploadModel>();
@@ -89,7 +86,7 @@ namespace Unicord.Universal.Models
                 Permissions = Permissions.Administrator;
             }
 
-            _slowModeTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1 / 60.0) };
+            _slowModeTimer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(1 / 30) };
             _slowModeTimer.Tick += (o, e) =>
             {
                 SlowModeTimeout = Math.Max(0, PerUserRateLimit - (DateTimeOffset.Now - _messageLastSent).TotalMilliseconds);
@@ -102,7 +99,7 @@ namespace Unicord.Universal.Models
             };
         }
 
-        public ObservableCollection<MessageViewModel> Messages
+        public ObservableCollection<DiscordMessage> Messages
         {
             get => _messages;
             set => OnPropertySet(ref _messages, value);
@@ -343,8 +340,6 @@ namespace Unicord.Universal.Models
 
         public bool ShowTypingContainer =>
             ShowSlowMode || ShowTypingUsers;
-        public bool HideTypingContainer =>
-            !ShowTypingContainer;
 
         public DateTimeOffset LastAccessed { get; internal set; }
 
@@ -361,7 +356,7 @@ namespace Unicord.Universal.Models
         }
 
         public bool ShowPopoutButton
-            => WindowingService.Current.IsSupported && WindowingService.Current.IsMainWindow(_windowHandle);
+            => WindowingService.Current.Supported && WindowingService.Current.IsMainWindow(_windowHandle);
 
         public bool IsPinned =>
             SecondaryTile.Exists($"Channel_{Channel.Id}");
@@ -370,35 +365,34 @@ namespace Unicord.Universal.Models
 
         private async Task OnMessageCreated(MessageCreateEventArgs e)
         {
-            if (e.Channel != Channel) return;
-
             await _loadSemaphore.WaitAsync().ConfigureAwait(false);
 
             try
             {
-                if (_typingCancellation.TryGetValue(e.Author.Id, out var src))
+                if (e.Channel.Id == Channel.Id)
                 {
-                    src.Cancel();
-                }
-
-                var usr = TypingUsers.FirstOrDefault(u => u.Id == e.Author.Id);
-                if (usr != null)
-                {
-                    _context.Post(a =>
+                    if (_typingCancellation.TryGetValue(e.Author.Id, out var src))
                     {
-                        TypingUsers.Remove(usr);
-                        UnsafeInvokePropertyChanged(nameof(ShowTypingUsers));
-                        UnsafeInvokePropertyChanged(nameof(ShowTypingContainer));
-                        UnsafeInvokePropertyChanged(nameof(HideTypingContainer));
-                    }, null);
-                }
+                        src.Cancel();
+                    }
 
-                if (string.IsNullOrWhiteSpace(e.Message.Author.Username))
-                    _ = RequestMissingMembersAsync(new[] { e.Message });
+                    var usr = TypingUsers.FirstOrDefault(u => u.Id == e.Author.Id);
+                    if (usr != null)
+                    {
+                        _context.Post(a =>
+                        {
+                            TypingUsers.Remove(usr);
+                            UnsafeInvokePropertyChanged(nameof(ShowTypingUsers));
+                        }, null);
+                    }
 
-                if (!Messages.Any(m => m.Id == e.Message.Id))
-                {
-                    _context.Post(a => AddMessage(e.Message), null);
+                    if (string.IsNullOrWhiteSpace(e.Message.Author.Username))
+                        _ = RequestMissingMembersAsync(new[] { e.Message });
+
+                    if (!Messages.Any(m => m.Id == e.Message.Id))
+                    {
+                        _context.Post(a => Messages.Add(e.Message), null);
+                    }
                 }
             }
             finally
@@ -410,16 +404,13 @@ namespace Unicord.Universal.Models
 
         private Task OnMessageDeleted(MessageDeleteEventArgs e)
         {
-            if (e.Channel != Channel) return Task.CompletedTask;
-
             // BUGBUG: These are fire and forget, may be better to refactor into an async event setup?
-            _context.Post(a => RemoveMessage(e.Message), null);
+            _context.Post(a => Messages.Remove(e.Message), null);
             return Task.CompletedTask;
         }
 
         private Task OnChannelUpdated(ChannelUpdateEventArgs e)
         {
-            // todo: what changed
             if (e.ChannelAfter.Id == _channel.Id)
             {
                 // Channel = e.ChannelAfter;
@@ -428,7 +419,7 @@ namespace Unicord.Universal.Models
             return Task.CompletedTask;
         }
 
-        private async Task OnResumed(ResumedEventArgs e)
+        private async Task OnResumed(ReadyEventArgs e)
         {
             await _loadSemaphore.WaitAsync().ConfigureAwait(false);
 
@@ -493,37 +484,33 @@ namespace Unicord.Universal.Models
 
         private void InsertMessages(int index, IEnumerable<DiscordMessage> messages) => _context.Post(d =>
         {
-            _ = RequestMissingMembersAsync(messages);
+            var t = d as ChannelViewModel;
+            _ = t.RequestMissingMembersAsync(messages);
 
             foreach (var mess in messages)
             {
-                InsertMessage(index + 1, mess);
+                //if (!t.Messages.Any(m => m.Id == mess.Id))
+                //{
+                t.Messages.Insert(index + 1, mess);
+                //}
             }
         }, this);
 
         private void ClearAndAddMessages(IEnumerable<DiscordMessage> messages) => _context.Post(d =>
         {
-            _ = RequestMissingMembersAsync(messages);
+            var t = d as ChannelViewModel;
+            t.Messages.Clear();
+            _ = t.RequestMissingMembersAsync(messages);
 
             Messages.Clear();
-            foreach (var mess in messages.Reverse())
-            {
-                AddMessage(mess);
-            }
-
-        }, null);
+            Messages = new ObservableCollection<DiscordMessage>(messages.Reverse());
+        }, this);
 
         private async Task RequestMissingMembersAsync(IEnumerable<DiscordMessage> messages)
         {
             if (Channel.Guild != null)
             {
-                var mentionedUsers = messages.SelectMany(m => m.MentionedUsers);
-                var usersToSync = messages.Select(m => m.Author)
-                                          .Where(u => string.IsNullOrWhiteSpace(u.Username) || (u is not DiscordMember m || m.IsLocal))
-                                          .Concat(mentionedUsers)
-                                          .Select(u => u.Id)
-                                          .Distinct();
-
+                var usersToSync = messages.Select(m => m.Author).OfType<DiscordMember>().Where(u => u.IsLocal || string.IsNullOrWhiteSpace(u.Username)).Distinct();
                 Analytics.TrackEvent("ChannelViewModel_RequestMembers", new Dictionary<string, string> { ["Count"] = $"{usersToSync.Count()}" });
 
                 if (usersToSync.Any())
@@ -547,8 +534,7 @@ namespace Unicord.Universal.Models
                 var message = Messages.FirstOrDefault();
                 if (message != null)
                 {
-                    var messages = await Channel.GetMessagesBeforeAsync(message.Id, INITIAL_LOAD_LIMIT)
-                        .ConfigureAwait(false);
+                    var messages = await Channel.GetMessagesBeforeAsync(message.Id, INITIAL_LOAD_LIMIT).ConfigureAwait(false);
                     if (messages.Any())
                     {
                         InsertMessages(-1, messages);
@@ -577,7 +563,7 @@ namespace Unicord.Universal.Models
                     var username = output.Substring(index, index2 - index);
                     var discriminator = output.Substring(index2, 4);
 
-
+                    
                 }
 
                 // process a user *or* role
@@ -627,8 +613,7 @@ namespace Unicord.Universal.Models
                         files.Add(item.Spoiler ? $"SPOILER_{item.FileName}" : item.FileName, await item.GetStreamAsync().ConfigureAwait(false));
                     }
 
-                    await Tools.SendFilesWithProgressAsync(Channel, txt, mentions, replyTo, files, progress)
-                               .ConfigureAwait(false);
+                    await Tools.SendFilesWithProgressAsync(Channel, txt, mentions, replyTo, files, progress).ConfigureAwait(false);
 
                     foreach (var item in files)
                     {
@@ -665,7 +650,7 @@ namespace Unicord.Universal.Models
         {
             if (Messages.Count > max)
             {
-                Messages = new ObservableCollection<MessageViewModel>(Messages.TakeLast(max));
+                Messages = new ObservableCollection<DiscordMessage>(Messages.TakeLast(max));
             }
         }
 
@@ -698,54 +683,43 @@ namespace Unicord.Universal.Models
                 {
                     TypingUsers.Add(Channel.Guild != null && Channel.Guild.Members.TryGetValue(e.User.Id, out var member) ? member : e.User);
                     UnsafeInvokePropertyChanged(nameof(ShowTypingUsers));
-                    UnsafeInvokePropertyChanged(nameof(ShowTypingContainer));
-                    UnsafeInvokePropertyChanged(nameof(HideTypingContainer));
                 }, null);
 
-                HandleTypingStart(e);
+                new Task(async () => await HandleTypingStartAsync(e)).Start();
             }
 
             return Task.CompletedTask;
         }
 
-        private void HandleTypingStart(TypingStartEventArgs e)
+        private async Task HandleTypingStartAsync(TypingStartEventArgs e)
         {
-            var source = new CancellationTokenSource(10_000);
-            source.Token.Register(() => _context.Post(o =>
-            {
-                TypingUsers.Remove(e.User);
-                UnsafeInvokePropertyChanged(nameof(ShowTypingUsers));
-                UnsafeInvokePropertyChanged(nameof(ShowTypingContainer));
-                UnsafeInvokePropertyChanged(nameof(HideTypingContainer));
-            }, null));
-
+            var source = new CancellationTokenSource();
             _typingCancellation[e.User.Id] = source;
+
+            await Task.Delay(10_000, source.Token).ContinueWith(t =>
+            {
+                _context.Post(o =>
+                {
+                    TypingUsers.Remove(e.User);
+                    UnsafeInvokePropertyChanged(nameof(ShowTypingUsers));
+                }, null);
+            });
         }
 
         #endregion
 
-        private void AddMessage(DiscordMessage message)
-        {
-            Messages.Add(new MessageViewModel(message, this));
-        }
-
-        private void InsertMessage(int index, DiscordMessage message)
-        {
-            Messages.Insert(index, new MessageViewModel(message, this));
-        }
-
-        private void RemoveMessage(DiscordMessage message)
-        {
-            var vm = Messages.FirstOrDefault(m => m.Id == message.Id);
-            if (vm == null)
-                return;
-
-            Messages.Remove(vm);
-        }
-
         public virtual void Dispose()
         {
             IsDisposed = true;
+
+            if (Channel.Type != ChannelType.Voice)
+            {
+                App.Discord.TypingStarted -= OnTypingStarted;
+                App.Discord.MessageCreated -= OnMessageCreated;
+                App.Discord.MessageDeleted -= OnMessageDeleted;
+                App.Discord.ChannelUpdated -= OnChannelUpdated;
+                App.Discord.Resumed -= OnResumed;
+            }
 
             Messages.Clear();
 

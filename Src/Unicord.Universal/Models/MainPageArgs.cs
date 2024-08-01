@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Activation;
 using Windows.UI.ViewManagement;
 
 namespace Unicord.Universal.Models
@@ -15,7 +14,6 @@ namespace Unicord.Universal.Models
         public ulong UserId { get; set; }
         public bool FullFrame { get; set; }
         public ApplicationViewMode ViewMode { get; internal set; }
-        public SplashScreen SplashScreen { get; internal set; }
         public Exception ThemeLoadException { get; internal set; }
     }
 }

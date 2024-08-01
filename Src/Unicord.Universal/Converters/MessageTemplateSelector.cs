@@ -1,6 +1,5 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
-using Unicord.Universal.Models.Messages;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -13,9 +12,9 @@ namespace Unicord.Universal.Converters
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is MessageViewModel message)
+            if (item is DiscordMessage message)
             {
-                if (message.IsSystemMessage)
+                if (message.MessageType != MessageType.Default && message.MessageType != MessageType.Reply)
                     return SystemMessageTemplate;
             }
 

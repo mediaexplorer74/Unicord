@@ -1,11 +1,12 @@
-# Unicord 2.0-alpha
-My fork of famous Discord client :)
+# Unicord 1.9 - dev branch
+My fork of famous Discord client for my own micro-RnD :)
 
 ## About
-A free, open source Discord Client for Windows 10 and Windows 10 Mobile, that tries to provide a fast, efficient, native feeling Discord experience, while adding handy extras along the way. Built on [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/)!
+A free, open source Discord Client for Windows 10 (Mobile), that tries to provide a fast, efficient, native feeling Discord experience, while adding handy extras along the way. Built on [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus/)!
 
 ## Screenshot(s)
 ![Win11](Images/shot01.png)
+![Win11](Images/shot02.png)
 
 [![Build Status](https://dev.azure.com/WanKerrCoLtd/Unicord/_apis/build/status/WamWooWam.Unicord?branchName=master)](https://dev.azure.com/WanKerrCoLtd/Unicord/_build/latest?definitionId=4&branchName=master)
 
@@ -16,17 +17,19 @@ So you wanna build Unicord, well you're gonna need to have a few things handy.
  - Windows 10 (Build 19041+) or Windows 11
  - Visual Studio 2019 or later, with the Universal Windows Platform workload.
  - Windows 10 SDK 19041
- - Windows 10 SDK 17763  
+ - Windows 10 SDK 16299 (subject to change)
 
 ### Building and Installing
 Firstly, as with all GitHub projects, you'll want to clone the repo, but you will also need to pull submodules, to do this, use:
 
-```sh
-$ git submodule update --init --recursive
 ```
-
-From here, building should be as simple as double clicking `Unicord.sln`, ensuring your targets are appropriate to your testing platform (i.e. Debug x64), and hitting F5. 
-Once built and deployed, it should show in your start menu as "Unicord Canary", data and settings are kept separate from the Store version, so they can be installed side by side.
+git submodule update --recursive
+```
+Or if it doesn't work
+```
+git submodule update --init --recursive
+```
+From here, building should be as simple as double clicking `Unicord.sln`, ensuring your targets are appropriate to your testing platform (i.e. Debug x64), and hitting F5. Once built and deployed, it should show in your start menu as "Unicord Canary", data and settings are kept separate from the Store version, so they can be installed side by side.
 
 ![Canary](https://i.imgur.com/NaMdkZ4.png)
 
@@ -42,7 +45,6 @@ Unicord accepts contributions! Want a feature that doesn't already exist? Feel f
 
 ## Get in Touch
 We have a Discord server specifically for Unicord development and testing, join here:
-
 [![Unicord](https://discordapp.com/api/guilds/648519011130408980/widget.png?style=banner2)](https://discord.gg/64g7M5Y)
 
 ## License

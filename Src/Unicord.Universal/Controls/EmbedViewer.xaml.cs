@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using DSharpPlus.Entities;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Unicord.Universal.Controls.Embeds;
-using Unicord.Universal.Pages.Overlay;
-using Unicord.Universal.Services;
 using Unicord.Universal.Utilities;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
@@ -22,6 +19,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+
 
 namespace Unicord.Universal.Controls
 {
@@ -58,7 +56,7 @@ namespace Unicord.Universal.Controls
             if (Embed.Type == "image" && Embed.Thumbnail != null)
             {
                 var imageElement = new ImageElement() { ImageUri = Embed.Thumbnail.ProxyUrl, ImageWidth = Embed.Thumbnail.Width, ImageHeight = Embed.Thumbnail.Height };
-                imageElement.Tapped += OnImageTapped;
+                imageElement.Tapped += ImageElement_Tapped;
 
                 Content = imageElement;
                 return;
@@ -148,7 +146,6 @@ namespace Unicord.Universal.Controls
             if (Embed.Image != null)
             {
                 var image = new ImageElement() { ImageUri = Embed.Image.ProxyUrl, ImageWidth = Embed.Image.Width, ImageHeight = Embed.Image.Height };
-                image.Tapped += OnImageTapped;
                 AddWithRow(image);
             }
 
@@ -202,6 +199,17 @@ namespace Unicord.Universal.Controls
                 element.MediaPlayer.IsMuted = true;
                 element.MediaPlayer.IsLoopingEnabled = true;
             }
+        }
+
+        private void ImageElement_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            this.FindParent<MainPage>()?.ShowAttachmentOverlay(
+                Embed.Thumbnail.Url,
+                Embed.Thumbnail.Width,
+                Embed.Thumbnail.Height,
+                open_Click,
+                save_Click,
+                share_Click);
         }
 
         private async void open_Click(object sender, RoutedEventArgs e)
@@ -312,20 +320,6 @@ namespace Unicord.Universal.Controls
         private void Thumbnail_ImageFailed(object sender, ExceptionRoutedEventArgs e)
         {
             (sender as Image).Visibility = Visibility.Collapsed;
-        }
-
-        private async void ThumbnailImage_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (Embed.Thumbnail != null)
-                await OverlayService.GetForCurrentView()
-                                    .ShowOverlayAsync<AttachmentOverlayPage>(Embed.Thumbnail);
-        }
-
-        private async void OnImageTapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (Embed.Image != null)
-                await OverlayService.GetForCurrentView()
-                                    .ShowOverlayAsync<AttachmentOverlayPage>(Embed.Image);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Unicord.Universal.Integration
 
                     if (channel.Guild != null)
                     {
-                        group = "ms-resource:///Resources/RecentChannelsJumpListGroup";
+                        group = "ms-resource:RecentChannelsJumpListGroup";
                         title = $"#{channel.Name} - {channel.Guild.Name}";
 
                         file = await folder.CreateFileAsync($"server-{channel.Guild.IconHash}.png", CreationCollisionOption.ReplaceExisting);
@@ -37,7 +37,7 @@ namespace Unicord.Universal.Integration
                     }
                     else if (channel is DiscordDmChannel dm && dm.Type == ChannelType.Private)
                     {
-                        group = "ms-resource:///Resources/RecentPeopleJumpListGroup";
+                        group = "ms-resource:RecentPeopleJumpListGroup";
                         title = $"@{dm.Recipients.FirstOrDefault().Username}";
 
                         file = await folder.CreateFileAsync($"user-{dm.Recipients.FirstOrDefault().AvatarHash}.png", CreationCollisionOption.ReplaceExisting);

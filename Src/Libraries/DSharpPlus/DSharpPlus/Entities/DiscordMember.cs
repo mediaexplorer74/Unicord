@@ -219,8 +219,15 @@ namespace DSharpPlus.Entities
         /// </summary>
         public override bool? MfaEnabled
         {
-            get => this.User.MfaEnabled;
-            internal set => this.User.MfaEnabled = value;
+            get
+            {
+                return this.User.MfaEnabled;
+            }
+
+            internal set
+            {
+                this.User.MfaEnabled = value;
+            }
         }
 
         /// <summary>
@@ -229,8 +236,15 @@ namespace DSharpPlus.Entities
         /// </summary>
         public override bool? Verified
         {
-            get => this.User.Verified;
-            internal set => this.User.Verified = value;
+            get
+            {
+                return this.User.Verified;
+            }
+
+            internal set
+            {
+                this.User.Verified = value;
+            }
         }
 
         /// <summary>
@@ -238,8 +252,15 @@ namespace DSharpPlus.Entities
         /// </summary>
         public override string Locale
         {
-            get => this.User.Locale;
-            internal set => this.User.Locale = value;
+            get
+            {
+                return this.User.Locale;
+            }
+
+            internal set
+            {
+                this.User.Locale = value;
+            }
         }
 
         /// <summary>
@@ -247,8 +268,21 @@ namespace DSharpPlus.Entities
         /// </summary>
         public override UserFlags? OAuthFlags
         {
-            get => this.User.OAuthFlags;
-            internal set => this.User.OAuthFlags = value;
+            get
+            {
+                if (this.User != null)
+                {
+                    return this.User.OAuthFlags;
+                }
+                else
+                    return default;
+            }
+
+            internal set
+            {
+                if (this.User != null)
+                    this.User.OAuthFlags = value;
+            }
         }
 
         /// <summary>
@@ -256,8 +290,21 @@ namespace DSharpPlus.Entities
         /// </summary>
         public override UserFlags? Flags
         {
-            get => this.User.Flags;
-            internal set => this.User.Flags = value;
+            get
+            {
+                if (this.User != null)
+                {
+                    return this.User.Flags;
+                }
+                else
+                    return default;
+            }
+
+            internal set
+            {
+                if (this.User != null)
+                    this.User.Flags = value;
+            }
         }
         #endregion
 

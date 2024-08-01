@@ -9,7 +9,7 @@
     xmlns:lib="using:Microsoft.UI.Xaml.Controls" 
     xmlns:flyouts="using:Unicord.Universal.Controls.Flyouts"
     xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:converters="using:Unicord.Universal.Converters" xmlns:aurora="using:System.Windows.Shell.Aurora"
+    xmlns:converters="using:Unicord.Universal.Converters"
     mc:Ignorable="d">
     <Page.Resources>
         <converters:ChannelTypeTemplateSelector x:Key="ChannelTemplateSelector" 
@@ -42,35 +42,31 @@
                                 <Style TargetType="MenuFlyoutPresenter">
                                     <Setter Property="MinWidth" Value="220" />
                                     <Setter Property="MaxWidth" Value="220" />
-                                    <Setter Property="Margin" Value="4,0,0,0"/>
                                 </Style>
                             </flyouts:GuildContextFlyout.MenuFlyoutPresenterStyle>
                         </flyouts:GuildContextFlyout>
                     </FlyoutBase.AttachedFlyout>
 
-                    <Grid CornerRadius="4,4,0,0"
-                          Visibility="{Binding HeaderImage, Converter={StaticResource HideOnNullConverter}}">
-                        <controls1:ImageEx Source="{Binding HeaderImage}" Height="128" Stretch="UniformToFill" HorizontalAlignment="Center" />
-                        <Rectangle Fill="{ThemeResource BackgroundGradientBrush}" IsHitTestVisible="False" />
+                    <Grid Visibility="{Binding HeaderImage, Converter={StaticResource HideOnNullConverter}}">
+                        <controls1:ImageEx Source="{Binding HeaderImage}" Height="128" Stretch="UniformToFill"/>
+                        <Rectangle Fill="{ThemeResource BackgroundGradientBrush}" />
                     </Grid>
 
-                    <Grid VerticalAlignment="Bottom" Height="48">
+                    <Grid Height="42" VerticalAlignment="Bottom">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Margin="16,0,0,4"
+                        <TextBlock Margin="16,0"
                                    VerticalAlignment="Center"
-                                   Style="{ThemeResource SubtitleTextBlockStyle}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"
                                    Text="{Binding Name}"
-                                   FontFamily="Segoe UI Variable Display"
-                                   TextTrimming="Clip"
-                                   TextWrapping="NoWrap"/>
+                                   TextTrimming="CharacterEllipsis" />
 
                         <Button Content="&#xE70D;" 
                                 Grid.Column="1"
-                                Margin="4"
                                 DataContext="{Binding Guild}"
                                 Style="{StaticResource IconButtonStyle}"
                                 Click="OnButtonClicked">
@@ -79,12 +75,14 @@
                 </Grid>
             </ListView.Header>
             <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem" BasedOn="{StaticResource DefaultListViewItemStyle}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    <Setter Property="VerticalContentAlignment" Value="Stretch" />
-                    <Setter Property="Padding" Value="0,0" />
-                    <Setter Property="Margin" Value="0,0" />
-                    <Setter Property="MinHeight" Value="0" />
+                <Style TargetType="ListViewItem">
+                    <Style.Setters>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                        <Setter Property="Padding" Value="0,0" />
+                        <Setter Property="Margin" Value="0,0" />
+                        <Setter Property="MinHeight" Value="0" />
+                    </Style.Setters>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

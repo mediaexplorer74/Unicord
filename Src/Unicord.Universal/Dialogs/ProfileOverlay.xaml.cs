@@ -47,7 +47,7 @@ namespace Unicord.Universal.Dialogs
         {
             if (e.Key == VirtualKey.Escape)
             {
-                this.FindParent<MainPage>().HideUserOverlay();
+                this.FindParent<MainPage>().HideOverlay();
             }
         }
     }

@@ -77,8 +77,7 @@ namespace Unicord.Universal.Shared
             {
                 foreach (var channel in message.MentionedChannels)
                 {
-                    if (channel != null)
-                        messageText = messageText.Replace(channel.Mention, $"#{channel.Name}");
+                    messageText = messageText.Replace(channel.Mention, $"#{channel.Name}");
                 }
 
                 foreach (var roleId in message.MentionedRoleIds)
@@ -135,7 +134,7 @@ namespace Unicord.Universal.Shared
             }
             else
             {
-                if (!string.IsNullOrWhiteSpace(message.Channel?.Guild.IconUrl))
+                if (!string.IsNullOrWhiteSpace(message.Channel.Guild.IconUrl))
                     tileContentBuilder.SetPeekImage(new Uri(message.Channel.Guild.IconUrl + "?size=1024"));
 
                 tileContentBuilder.AddAdaptiveTileVisualChild(new AdaptiveText() { Text = $"#{message.Channel.Name}", HintStyle = AdaptiveTextStyle.Base })

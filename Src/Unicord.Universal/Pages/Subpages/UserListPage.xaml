@@ -36,7 +36,8 @@
             Grid.Row="1"
             Margin="8"
             BorderThickness="1"
-            QueryIcon="Find" />
+            QueryIcon="Find"
+            Style="{StaticResource CleanAutoSuggestBox}" />
 
         <ListView
             x:Name="userList"
