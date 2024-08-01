@@ -1,0 +1,59 @@
+﻿<Page
+    x:Class="Unicord.Universal.Pages.Settings.MediaSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Unicord.Universal.Pages.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:models="using:Unicord.Universal.Models"
+    xmlns:settings="using:SettingsControl"
+    mc:Ignorable="d" x:DefaultBindMode="TwoWay">
+    <Page.DataContext>
+        <models:MediaSettingsModel/>
+    </Page.DataContext>
+
+    <StackPanel>
+        <settings:SettingsBlockControl x:Uid="/MediaSettingsPage/MediaCompressionBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEA69;"/>
+            </settings:SettingsBlockControl.Icon>
+            <settings:SettingsBlockControl.ExpandableContent>
+                <StackPanel Margin="12">
+                    <TextBlock Style="{ThemeResource BaseTextBlockStyle}" x:Uid="/MediaSettingsPage/VideoOptionsHeader" Text="Video Options" />
+                    <ComboBox Margin="0,12" x:Uid="/MediaSettingsPage/ResolutionBox" ItemsSource="{Binding AvailableResolutions}" SelectedValue="{Binding Resolution}" SelectionChanged="ComboBox_SelectionChanged" HorizontalAlignment="Stretch"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="bitrateSlider" x:Uid="/MediaSettingsPage/BitrateSlider" TickFrequency="256" StepFrequency="64" Value="{Binding VideoBitrate, Mode=TwoWay}" Minimum="256" Maximum="4096" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" MinWidth="60" TextAlignment="Right" Margin="4,20,0,0">
+                            <Run Text="{Binding Value, ElementName=bitrateSlider}"/>kbps
+                        </TextBlock>
+                    </Grid>
+                    <ComboBox HorizontalAlignment="Stretch" x:Uid="/MediaSettingsPage/EncoderPriorityBox" SelectedIndex="{Binding ProcessingAlgorithm, Mode=TwoWay}" Margin="0,12">
+                        <ComboBoxItem x:Uid="/MediaSettingsPage/EncoderPrioritySpeed" />
+                        <ComboBoxItem x:Uid="/MediaSettingsPage/EncoderPriorityQuality" />
+                    </ComboBox>
+                    <TextBlock Style="{ThemeResource BaseTextBlockStyle}" x:Uid="/MediaSettingsPage/AudioOptionsHeader" Margin="0,0,0,12"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Slider x:Name="audioBitrateSlider" x:Uid="/MediaSettingsPage/BitrateSlider" TickFrequency="32" StepFrequency="32" Value="{Binding AudioBitrate, Mode=TwoWay}" Minimum="32" Maximum="320" />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" MinWidth="60" TextAlignment="Right" Margin="4,20,0,0">
+                            <Run Text="{Binding Value, ElementName=audioBitrateSlider}"/>kbps
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+            </settings:SettingsBlockControl.ExpandableContent>
+            <ComboBox HorizontalAlignment="Stretch" SelectedIndex="{Binding AutoTranscodeMedia, Mode=TwoWay}" MinWidth="200">
+                <ComboBoxItem x:Uid="/MediaSettingsPage/AlwaysCompress"/>
+                <ComboBoxItem x:Uid="/MediaSettingsPage/CompressIfNeeded"/>
+                <ComboBoxItem x:Uid="/MediaSettingsPage/NeverCompress"/>
+            </ComboBox>
+        </settings:SettingsBlockControl>
+    </StackPanel>
+</Page>

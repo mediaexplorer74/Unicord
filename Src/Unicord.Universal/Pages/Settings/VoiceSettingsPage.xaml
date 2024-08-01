@@ -1,0 +1,81 @@
+﻿<Page
+    x:Class="Unicord.Universal.Pages.Settings.VoiceSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Unicord.Universal.Pages.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settings="using:SettingsControl"
+    mc:Ignorable="d" Loaded="Page_Loaded"
+    d:DesignWidth="450">
+    <Page.Resources>
+        <DataTemplate x:Key="DeviceTemplate">
+            <TextBlock Text="{Binding Name, FallbackValue=Default, TargetNullValue=Default}"/>
+        </DataTemplate>
+    </Page.Resources>
+
+    <StackPanel>
+        <TextBlock x:Uid="/VoiceSettingsPage/AudioDevicesHeader" Style="{ThemeResource BaseTextBlockStyle}" Text="Audio Devices" Margin="4,0,0,16"/>
+
+        <settings:SettingsBlockControl x:Uid="/VoiceSettingsPage/InputDeviceBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE720;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ComboBox ItemTemplate="{StaticResource DeviceTemplate}" 
+                      ItemsSource="{Binding AvailableInputDevices}"
+                      SelectedItem="{Binding InputDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      HorizontalAlignment="Stretch"
+                      MinWidth="200"/>
+        </settings:SettingsBlockControl>
+
+        <settings:SettingsBlockControl x:Uid="/VoiceSettingsPage/OutputDeviceBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE7F5;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ComboBox ItemTemplate="{StaticResource DeviceTemplate}" 
+                      ItemsSource="{Binding AvailableOutputDevices}" 
+                      SelectedItem="{Binding OutputDevice, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                      HorizontalAlignment="Stretch"
+                      MinWidth="200"/>
+        </settings:SettingsBlockControl>
+
+        <TextBlock x:Uid="/VoiceSettingsPage/AudioProcessingHeader" Text="Audio Processing" Style="{ThemeResource BaseTextBlockStyle}" Margin="4,16" />
+
+        <settings:SettingsBlockControl x:Uid="/VoiceSettingsPage/NoiseSuppressionBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF61F;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ComboBox x:Name="NoiseSuppression"
+                      SelectedIndex="{Binding SuppressionLevel, Mode=TwoWay}"
+                      HorizontalAlignment="Stretch"
+                      MinWidth="200">
+                <ComboBoxItem x:Uid="/VoiceSettingsPage/NoiseSuppressionDisabled" Content="Disabled"/>
+                <ComboBoxItem x:Uid="/VoiceSettingsPage/NoiseSuppressionLow" Content="Low"/>
+                <ComboBoxItem x:Uid="/VoiceSettingsPage/NoiseSuppressionMedium" Content="Medium"/>
+                <ComboBoxItem x:Uid="/VoiceSettingsPage/NoiseSuppressionHigh" Content="High"/>
+            </ComboBox>
+        </settings:SettingsBlockControl>
+
+        <settings:SettingsBlockControl x:Uid="/VoiceSettingsPage/VoiceActivityBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF12E;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding VoiceActivity, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+
+        <settings:SettingsBlockControl x:Uid="/VoiceSettingsPage/AutomaticGainControlBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE767;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding AutomaticGainControl, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+
+        <settings:SettingsBlockControl x:Uid="/VoiceSettingsPage/EchoCancellationBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEC72;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding EchoCancellation, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+        
+    </StackPanel>
+</Page>

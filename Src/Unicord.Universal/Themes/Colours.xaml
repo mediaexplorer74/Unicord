@@ -1,0 +1,98 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Unicord.Universal.Resources"
+    xmlns:media="using:Microsoft.UI.Xaml.Media">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <Color x:Key="BackgroundPrimaryColour">#FFF5F5F5</Color>
+            <Color x:Key="BackgroundSecondaryColour">#FFF0F0F0</Color>
+            <Color x:Key="BackgroundTertiaryColour">#FFEEEEEE</Color>
+            <SolidColorBrush x:Key="ErrorTextForegroundBrush" Color="#FFC50500"/>
+            <LinearGradientBrush x:Key="BackgroundGradientBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                <GradientStop Color="#00FFFFFF" Offset="0.0" />
+                <GradientStop Color="#00FFFFFF" Offset="0.50" />
+                <GradientStop Color="#40FFFFFF" Offset="0.70" />
+                <GradientStop Color="#C0FFFFFF" Offset="1" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <Color x:Key="BackgroundPrimaryColour">#FF0F0F0F</Color>
+            <Color x:Key="BackgroundSecondaryColour">#FF181818</Color>
+            <Color x:Key="BackgroundTertiaryColour">#FF1C1C1C</Color>
+            <SolidColorBrush x:Key="ErrorTextForegroundBrush" Color="#FFFFF000"/>
+            <LinearGradientBrush x:Key="BackgroundGradientBrush" StartPoint="0.5,0" EndPoint="0.5,1">
+                <GradientStop Color="#00000000" Offset="0.0" />
+                <GradientStop Color="#00000000" Offset="0.65" />
+                <GradientStop Color="#C0000000" Offset="1" />
+            </LinearGradientBrush>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <media:AcrylicBrush x:Key="SidebarPrimaryAcrylicWindowBrush" 
+                        BackgroundSource="HostBackdrop" 
+                        TintOpacity="0.60" 
+                        FallbackColor="{ThemeResource BackgroundPrimaryColour}" 
+                        TintColor="{ThemeResource BackgroundPrimaryColour}" />
+
+    <media:AcrylicBrush x:Key="SidebarPrimaryAcrylicElementBrush" 
+                        BackgroundSource="Backdrop" 
+                        TintOpacity="0.60" 
+                        FallbackColor="{ThemeResource BackgroundPrimaryColour}" 
+                        TintColor="{ThemeResource BackgroundPrimaryColour}" />
+
+    <media:AcrylicBrush x:Key="SidebarSecondaryAcrylicWindowBrush" 
+                        BackgroundSource="HostBackdrop" 
+                        TintOpacity="0.80" 
+                        FallbackColor="{ThemeResource BackgroundSecondaryColour}" 
+                        TintColor="{ThemeResource BackgroundSecondaryColour}" />
+
+    <media:AcrylicBrush x:Key="SidebarSecondaryAcrylicElementBrush" 
+                        BackgroundSource="Backdrop" 
+                        TintOpacity="0.80" 
+                        FallbackColor="{ThemeResource BackgroundSecondaryColour}" 
+                        TintColor="{ThemeResource BackgroundSecondaryColour}" />
+
+    <SolidColorBrush x:Key="BackgroundPrimaryBrush" Color="{ThemeResource BackgroundPrimaryColour}"/>
+    <SolidColorBrush x:Key="BackgroundSecondaryBrush" Color="{ThemeResource BackgroundSecondaryColour}"/>
+    <SolidColorBrush x:Key="BackgroundTertiaryBrush" Color="{ThemeResource BackgroundTertiaryColour}"/>
+    <SolidColorBrush x:Key="MainBackgroundBrush" Color="{ThemeResource BackgroundTertiaryColour}"/>
+
+    <Color x:Key="OfflinePresenceColour">#FF808080</Color>
+    <Color x:Key="OnlinePresenceColour">#FF33CC87</Color>
+    <Color x:Key="IdlePresenceColour">#FFFFA500</Color>
+    <Color x:Key="DoNotDisturbPresenceColour">#FFEE4447</Color>
+    <Color x:Key="FallbackPresenceColour">#FF000000</Color>
+
+    <Color x:Key="SuccessDark1Colour">#FF23923C</Color>
+    <Color x:Key="SuccessColour">#FF28A745</Color>
+    <Color x:Key="SuccessLight1Colour">#FF07E039</Color>
+    <Color x:Key="SuccessForegroundColor">#FFFFFFFF</Color>
+    
+    <Color x:Key="DangerDark1Colour">#FFD22435</Color>
+    <Color x:Key="DangerColour">#FFDC3545</Color>
+    <Color x:Key="DangerLight1Colour">#FFD45562</Color>
+    <Color x:Key="DangerForegroundColor">#FFFFFFFF</Color>
+
+    <!-- src: https://www.youtube.com/about/brand-resources/ -->
+    <Color x:Key="StreamingYouTubePresenceColour">#FFFF0000</Color>
+
+    <!-- src: https://brand.twitch.tv/ -->
+    <Color x:Key="StreamingTwitchPresenceColour">#FF9146FF</Color>
+
+    <!-- src: https://discordapp.com/branding -->
+    <Color x:Key="DiscordBlurpleColour">#FF7289DA</Color>
+    <Color x:Key="DiscordBlurpleLight1Colour">#FF8699DF</Color>
+    <Color x:Key="DiscordBlurpleDark1Colour">#FF4A67Cf</Color>
+
+    <media:AcrylicBrush x:Key="SpoilerAcrylicBrush"
+                        BackgroundSource="Backdrop"
+                        TintOpacity="0"
+                        FallbackColor="{ThemeResource SystemChromeMediumColor}"/>
+
+    <media:AcrylicBrush x:Key="OverlayBackdrop" TintColor="{ThemeResource SystemAltHighColor}" TintOpacity="0.33" FallbackColor="#80000000"/>
+
+    <SolidColorBrush x:Key="MentionBrush" Color="{ThemeResource SystemAccentColor}" Opacity="0.1"/>
+    <SolidColorBrush x:Key="TransparentBrush" Color="Transparent"/>
+
+</ResourceDictionary>

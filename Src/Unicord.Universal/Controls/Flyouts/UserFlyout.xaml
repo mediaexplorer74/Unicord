@@ -1,0 +1,69 @@
+﻿<utilities:AdaptiveFlyout
+    xmlns:utilities="using:Unicord.Universal.Utilities"
+    x:Class="Unicord.Universal.Controls.Flyouts.UserFlyout"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lib="using:Microsoft.UI.Xaml.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls="using:Unicord.Universal.Controls" xmlns:user="using:Unicord.Universal.Controls.Users"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Root" Width="256" Margin="-12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid RequestedTheme="Dark" Background="{ThemeResource SystemControlAccentDark1AcrylicElementAccentDark1Brush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <user:AvatarControl Style="{ThemeResource HugeAvatarWithPresenceStyle}"
+                                Width="128"
+                                Height="128"
+                                Margin="24,24,24,8"
+                                Source="{Binding AvatarUrl}"
+                                Presence="{Binding Presence}"/>
+            <StackPanel Grid.Row="1" RequestedTheme="Dark" >
+                <controls:UsernameControl User="{Binding}" FontSize="24" IconSize="24" HorizontalAlignment="Center" Margin="12,0" />
+                <TextBlock Foreground="{ThemeResource ApplicationSecondaryForegroundThemeBrush}" TextAlignment="Center" FontSize="16" Margin="0,0,0,24">
+                    @<Run Foreground="{ThemeResource ApplicationForegroundThemeBrush}" Text="{Binding Username}"/>#<Run Text="{Binding Discriminator}"/>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+        
+        <Grid Grid.Row="1" RequestedTheme="Dark" Visibility="{Binding Presence.Activity.Name, Converter={StaticResource HideOnNullConverter}, FallbackValue=Collapsed}" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}" >
+            <controls:RichPresenceControl DataContext="{Binding Presence.Activity}" Margin="8" />
+        </Grid>
+        
+        <Grid Grid.Row="2" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+            <StackPanel Margin="12,8,12,12" Visibility="{Binding Roles, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}">
+                <TextBlock x:Uid="/Dialogs/ProfileRoles" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,8"/>
+                <ItemsControl ItemTemplate="{ThemeResource RoleTemplate}" ItemsSource="{Binding Roles}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls1:WrapPanel VerticalSpacing="4" HorizontalSpacing="4"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel HorizontalAlignment="Stretch" Grid.Row="3" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+            <controls:IconLabelButton Icon="&#xE7EE;" Tapped="IconLabelButton_Tapped" Command="{StaticResource OpenUserOverlayCommand}" CommandParameter="{Binding}">
+                <TextBlock TextTrimming="CharacterEllipsis" x:Uid="/Flyouts/ShowFullProfile"/>
+            </controls:IconLabelButton>
+            <controls:IconLabelButton Icon="&#xE724;" Command="{StaticResource MessageUserCommand}" CommandParameter="{Binding}">
+                <TextBlock TextTrimming="CharacterEllipsis" x:Uid="/Flyouts/SendMessage"/>
+            </controls:IconLabelButton>
+        </StackPanel>
+       
+    </Grid>
+</utilities:AdaptiveFlyout>

@@ -1,0 +1,69 @@
+﻿<Page
+    x:Class="Unicord.Universal.Pages.Settings.SecuritySettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Unicord.Universal.Pages.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Unicord.Universal.Models"
+    xmlns:settings="using:SettingsControl"
+    x:DefaultBindMode="TwoWay"
+    Loaded="Page_Loaded"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <models:SecuritySettingsModel />
+    </Page.DataContext>
+
+    <StackPanel>
+
+        <settings:SettingsBlockControl x:Uid="/SecuritySettingsPage/DiagnosticDataBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE946;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding EnableAnalytics, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+        
+        <controls:MarkdownTextBlock
+            x:Name="unavailableText"
+            x:Uid="/SecuritySettingsPage/WindowsHelloUnavailable"
+            Grid.Row="4"
+            Margin="0,4"
+            FontSize="12"
+            Background="Transparent"
+            Foreground="{StaticResource ErrorTextForegroundBrush}"
+            TextWrapping="Wrap"/>
+
+        <StackPanel Margin="4,16">
+            <TextBlock x:Uid="/SecuritySettingsPage/WindowsHelloHeader"
+                   Text="Windows Hello"
+                   Grid.Row="3"
+                   Style="{ThemeResource BaseTextBlockStyle}"/>
+            <TextBlock x:Uid="/SecuritySettingsPage/WindowsHelloSubHeader"
+                       FontSize="12"
+                       Opacity="0.75"/>
+        </StackPanel>
+
+        <ContentControl
+            x:Name="settingsContent"
+            HorizontalContentAlignment="Stretch">
+            <StackPanel>
+                <settings:SettingsBlockControl x:Uid="/SecuritySettingsPage/LoginBlock">
+                    <ToggleSwitch Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding HelloForLogin, Mode=TwoWay}" />
+                </settings:SettingsBlockControl>
+                <settings:SettingsBlockControl x:Uid="/SecuritySettingsPage/SettingsBlock">
+                    <ToggleSwitch Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding HelloForSettings, Mode=TwoWay}" />
+                </settings:SettingsBlockControl>
+                <settings:SettingsBlockControl x:Uid="/SecuritySettingsPage/AccessNSFWBlock">
+                    <ToggleSwitch Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding HelloForNSFW, Mode=TwoWay}" />
+                </settings:SettingsBlockControl>
+                <settings:SettingsBlockControl x:Uid="/SecuritySettingsPage/StayAuthenticatedBlock">
+                    <TimePicker HorizontalAlignment="Stretch" Time="{Binding AuthenticationTime, Mode=TwoWay}" />
+                </settings:SettingsBlockControl>
+            </StackPanel>
+        </ContentControl>
+
+
+        <TextBlock Grid.Row="6" Grid.ColumnSpan="2"><Hyperlink>Privacy Policy</Hyperlink></TextBlock>
+    </StackPanel>
+</Page>

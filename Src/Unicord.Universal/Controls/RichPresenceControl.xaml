@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Class="Unicord.Universal.Controls.RichPresenceControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Unicord.Universal.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid>
+        <Grid Visibility="{Binding RichPresence, Converter={StaticResource HideOnNullConverter}, FallbackValue=Collapsed}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Visibility="{Binding RichPresence.LargeImage, Converter={StaticResource HideOnNullConverter}}" Width="80" Height="80" Margin="0,0,8,0">
+                    <Image Source="{Binding RichPresence.LargeImage.Url}" />
+                    <Image Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="{Binding RichPresence.SmallImage.Url}" Margin="4" />
+                </Grid>
+                <StackPanel VerticalAlignment="Center" Grid.Column="1">
+                    <TextBlock Style="{ThemeResource BaseTextBlockStyle}" TextWrapping="Wrap">
+                    <Run Text="{Binding Converter={StaticResource PresenceTextConverter}}"/>
+                    </TextBlock>
+                    <TextBlock Visibility="{Binding RichPresence.Details, Converter={StaticResource HideOnNullConverter}}" Text="{Binding RichPresence.Details}" TextWrapping="Wrap"/>
+                    <TextBlock Visibility="{Binding RichPresence.State, Converter={StaticResource HideOnNullConverter}}" Text="{Binding RichPresence.State}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid Visibility="{Binding CustomStatus, Converter={StaticResource HideOnNullConverter}, FallbackValue=Collapsed}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Width="24" Height="24" DataContext="{Binding CustomStatus.Emoji}" Visibility="{Binding CustomStatus.Emoji, Converter={StaticResource HideOnNullConverter}, FallbackValue=Collapsed}">
+                <Image x:Name="emoteImage" 
+                       Visibility="{Binding Url, Converter={StaticResource BoolVisibilityConverter}}" 
+                       MaxWidth="24" 
+                       MaxHeight="24" 
+                       Stretch="None" 
+                       ToolTipService.ToolTip="{Binding Name}">
+                    <Image.Source>
+                        <BitmapImage UriSource="{Binding Url}" />
+                    </Image.Source>
+                </Image>
+                
+                <TextBlock x:Name="emojiText" 
+                           Visibility="{Binding Unicode, Converter={StaticResource BoolVisibilityConverter}}" 
+                           Text="{Binding Unicode}" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Center" 
+                           FontSize="16"/>
+            </Grid>
+
+            <TextBlock Grid.Column="1" Text="{Binding CustomStatus.Name}"/>
+        </Grid>
+    </Grid>
+</UserControl>

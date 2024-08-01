@@ -1,0 +1,160 @@
+﻿<Page
+    x:Class="Unicord.Universal.Pages.Settings.MessagingSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Unicord.Universal.Pages.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:controls1="using:Unicord.Universal.Controls"
+    xmlns:models="using:Unicord.Universal.Models"
+    xmlns:messages="using:Unicord.Universal.Controls.Messages"
+    xmlns:settings="using:SettingsControl"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <models:MessagingSettingsModel />
+    </Page.DataContext>
+
+    <StackPanel>
+        <!-- 
+            Temporarily disabled for performance reasons
+        
+            <TextBlock Style="{ThemeResource SubtitleTextBlockStyle}" Text="Message Style"/>
+            <TextBlock TextWrapping="Wrap" Text="How would you like your messages to look?"/>
+            <ListBox ItemsSource="{Binding AvailableMessageStyles}" SelectedItem="{Binding SelectedMessageStyle, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Margin="0,4,0,8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="models:MessageStyle">
+                        <messages:MessageControl x:Name="ExampleMessageControl" BorderBrush="Transparent" Style="{x:Bind Value}" Message="{x:Bind ExampleMessage}" IsEnabled="False" Padding="0" Margin="0"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        -->
+
+        
+        <TextBlock x:Uid="/MessagingSettingsPage/ChatHeader"
+                   Style="{ThemeResource BaseTextBlockStyle}"
+                   Margin="4,0,4,16"/>
+
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/AutoPlayGIFsBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF4A9;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding AutoPlayGifs, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/EnableSpoilersBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE890;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding EnableSpoilers, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/PromptLinksBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE71B;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding WarnUnsafeLinks, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/ShowHugeEmojiBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xED54;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding ShowHugeEmoji, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+
+
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/EnableWebPBlock"   
+                                       Title="Use Webp where possible"
+                                       Description="Reduce bandwidth with a more efficient image codec">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE158;"/>
+            </settings:SettingsBlockControl.Icon>
+
+            <Grid>
+                <Button Content="Get from the Microsoft Store"
+                        Command="{Binding OpenWebPStoreLinkCommand}"
+                        Visibility="{Binding CanUseWebP, Converter={StaticResource InverseBoolVisibilityConverter}}"/>
+                <ToggleSwitch Style="{ThemeResource NoTextToggleSwitchStyle}" 
+                              IsOn="{Binding EnableWebP, Mode=TwoWay}"
+                              Visibility="{Binding CanUseWebP, Converter={StaticResource BoolVisibilityConverter}}"/>
+            </Grid>
+            
+        </settings:SettingsBlockControl>
+
+        
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/TimestampStyleBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEC92;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ComboBox ItemsSource="{Binding TimestampStyles}" 
+                      SelectedIndex="{Binding TimestampStyle, Mode=TwoWay}" 
+                      SelectionChanged="ComboBox_SelectionChanged" 
+                      HorizontalAlignment="Right"
+                      MinWidth="200">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Style}" />
+                            <TextBlock Text="{Binding Timestamp, Converter={StaticResource DateTimeConverter}, ConverterParameter={Binding Style}}"  Margin="4,0" VerticalAlignment="Center" FontSize="12" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </settings:SettingsBlockControl>
+
+        <TextBlock x:Uid="/MessagingSettingsPage/AdjustRoleColoursHeader"  
+                   Style="{ThemeResource BaseTextBlockStyle}" 
+                   Text="Accessibility"
+                   Margin="4,16"/>
+
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/ShowStatusGlyphsBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE776;"/>
+            </settings:SettingsBlockControl.Icon>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding ShowStatusGlyphs, Mode=TwoWay}" />
+        </settings:SettingsBlockControl>
+
+
+        <settings:SettingsBlockControl x:Uid="/MessagingSettingsPage/AdjustRoleColoursBlock">
+            <settings:SettingsBlockControl.Icon>
+                <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE790;"/>
+            </settings:SettingsBlockControl.Icon>
+            <settings:SettingsBlockControl.ExpandableContent>
+                <Grid Padding="20,8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Slider x:Name="MinimumContrastSlider"
+                            x:Uid="/MessagingSettingsPage/MinimumContrastSlider"
+                            Header="Minimum Contrast"
+                            Value="{Binding MinimumContrast, Mode=TwoWay}"
+                            IsEnabled="{Binding IsOn, ElementName=AdjustRoleColours}"
+                            Minimum="1"
+                            Maximum="21"
+                            StepFrequency="0.5"
+                            TickFrequency="1"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Margin="0,8,0,0"/>
+
+                    <Button x:Name="ContrastLearnMoreButton"
+                            x:Uid="/MessagingSettingsPage/LearnMoreButton"
+                            Content="Learn More"
+                            HorizontalAlignment="Right"
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Style="{ThemeResource TextBlockButtonStyle}"
+                            Click="ContrastLearnMoreButton_Click"/>
+                </Grid>
+            </settings:SettingsBlockControl.ExpandableContent>
+            <ToggleSwitch Grid.Column="1" Style="{ThemeResource NoTextToggleSwitchStyle}" IsOn="{Binding AdjustRoleColours, Mode=TwoWay}" Margin="0,0,-24,0" />
+        </settings:SettingsBlockControl>
+
+        
+
+    </StackPanel>
+</Page>
