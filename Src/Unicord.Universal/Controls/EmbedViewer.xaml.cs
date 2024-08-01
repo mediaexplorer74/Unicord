@@ -117,7 +117,12 @@ namespace Unicord.Universal.Controls
                 if (i == 0)
                 {
                     inline = field.Inline;
-                    p = inline ? new WrapPanel() { StretchChild = StretchChild.Last } : (Panel)new StackPanel();
+                    p = inline ? new WrapPanel() 
+                    { 
+                        //TODO
+                        //StretchChild = StretchChild.Last 
+                    } 
+                    : (Panel)new StackPanel();
                 }
 
                 if (field.Inline == inline)
@@ -132,7 +137,11 @@ namespace Unicord.Universal.Controls
                     }
 
                     inline = field.Inline;
-                    p = inline ? new WrapPanel() { StretchChild = StretchChild.Last } : (Panel)new StackPanel();
+                    p = inline ? new WrapPanel() 
+                    { 
+                        //TODO
+                        //StretchChild = StretchChild.Last 
+                    } : (Panel)new StackPanel();
 
                     AddFieldToPanel(p, field);
                 }

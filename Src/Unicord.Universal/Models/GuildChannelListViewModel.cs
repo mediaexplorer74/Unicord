@@ -82,13 +82,14 @@ namespace Unicord.Universal.Models
             var maxPos = channels.Max(c => c.Position) + 1;
 
             // Use new discord channel category behaviour (new as of 2017 KEKW)
+            //TODO
             var orderedChannels = channels.Where(c => c.Type != ChannelType.Category)
                 .Where(c => ShouldShowChannel(c, currentMember))
                 .OrderBy(c => c.Type == ChannelType.Voice)
                 .ThenBy(c => c.Position)
                 .GroupBy(g => g.Parent)
                 .OrderBy(g => g.Key?.Position)
-                .SelectMany(g => g.Key != null ? g.Prepend(g.Key) : g);
+                .SelectMany(g => g.Key != null ? /*g.Prepend(g.Key)*/g : g);
 
             Channels = new ObservableCollection<DiscordChannel>(orderedChannels);
         }

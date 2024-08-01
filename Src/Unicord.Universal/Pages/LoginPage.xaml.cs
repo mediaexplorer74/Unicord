@@ -184,7 +184,8 @@ namespace Unicord.Universal.Pages
         {
             if (uri != null)
             {
-                ProtocolRun.Text = uri.GetLeftPart(UriPartial.Scheme);
+                //TODO
+                ProtocolRun.Text = default;//uri.GetLeftPart(UriPartial.Scheme);
                 HostnameRun.Text = uri.Host;
                 PathRun.Text = uri.PathAndQuery;
             }

@@ -17,7 +17,7 @@ So you wanna build Unicord, well you're gonna need to have a few things handy.
  - Windows 10 (Build 19041+) or Windows 11
  - Visual Studio 2019 or later, with the Universal Windows Platform workload.
  - Windows 10 SDK 19041
- - Windows 10 SDK 16299 (subject to change)
+ - Windows 10 SDK 15063
 
 ### Building and Installing
 Firstly, as with all GitHub projects, you'll want to clone the repo, but you will also need to pull submodules, to do this, use:

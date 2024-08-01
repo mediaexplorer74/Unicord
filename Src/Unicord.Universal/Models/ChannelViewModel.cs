@@ -650,7 +650,10 @@ namespace Unicord.Universal.Models
         {
             if (Messages.Count > max)
             {
-                Messages = new ObservableCollection<DiscordMessage>(Messages.TakeLast(max));
+                //TODO
+                Messages = new ObservableCollection<DiscordMessage>(
+                    /*Messages.TakeLast(max)*/default
+                    );
             }
         }
 

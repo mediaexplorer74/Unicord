@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using DSharpPlus.Entities;
-using Microsoft.Toolkit.Uwp.UI.Lottie;
+//using Microsoft.Toolkit.Uwp.UI.Lottie;
 using Microsoft.UI.Xaml.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -67,9 +67,10 @@ namespace Unicord.Universal.Controls.Messages
                         player.Width = 150;
                         player.Height = 150;
 
-                        var source = new LottieVisualSource();
-                        source.UriSource = new Uri(s.GetAssetUrl());
-                        player.Source = source;
+                        //TODO
+                        //var source = new LottieVisualSource();
+                        //source.UriSource = new Uri(s.GetAssetUrl());
+                        //player.Source = source;
                         root.Child = player;
                     }
                     break;

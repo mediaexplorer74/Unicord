@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Web;
+//using System.Web;
 using System.Windows.Input;
 using DSharpPlus;
 using DSharpPlus.Entities;
@@ -16,7 +16,7 @@ namespace Unicord.Universal.Commands
         public CopyMessageCommand()
         {
             _pipeline = new MarkdownPipelineBuilder()
-                .DisableHeadings()
+                //.DisableHeadings()
                 .DisableHtml()
                 .UseAdvancedExtensions()
                 .UseAutoLinks()

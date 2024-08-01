@@ -202,7 +202,11 @@ namespace Unicord.Universal
         private static async Task OnProtocolActivatedAsync(ProtocolActivatedEventArgs protocol)
         {
             if (protocol.Uri.IsAbsoluteUri)
-                Analytics.TrackEvent("Unicord_LaunchForProtocol", new Dictionary<string, string>() { ["protocol"] = protocol.Uri.GetLeftPart(UriPartial.Authority) });
+            {
+                Analytics.TrackEvent("Unicord_LaunchForProtocol", 
+                    new Dictionary<string, string>() 
+                    { ["protocol"] = /*protocol.Uri.GetLeftPart(UriPartial.Authority)*/"protocol" });
+            }
 
             if (protocol.Uri.AbsolutePath.Trim('/').StartsWith("channels"))
             {

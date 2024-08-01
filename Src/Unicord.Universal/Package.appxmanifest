@@ -9,11 +9,11 @@
          xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
          xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
 				 IgnorableNamespaces="uap mp uap2 uap3 uap4 uap5 rescap">
-  <Identity Name="24101WamWooWamRD.Unicord" Publisher="CN=0F22111D-EDF0-42F0-B58D-26C4C5C5054B" Version="1.7.5.0" />
+  <Identity Name="24101WamWooWamRD.Unicord" Publisher="CN=0F22111D-EDF0-42F0-B58D-26C4C5C5054B" Version="1.9.0.0" />
   <mp:PhoneIdentity PhoneProductId="5783aabf-3049-421f-ae1d-e88bd89018f2" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>ms-resource:AppDisplayName</DisplayName>
-    <PublisherDisplayName>Wan Kerr Co. Ltd.</PublisherDisplayName>
+    <DisplayName>Unicord 1.9b</DisplayName>
+    <PublisherDisplayName>mediaexplorer</PublisherDisplayName>
     <Logo>Assets\Store\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
@@ -26,7 +26,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Unicord.Universal.App">
-      <uap:VisualElements DisplayName="ms-resource:AppDisplayName" Square150x150Logo="Assets\Store\Square150x150Logo.png" Square44x44Logo="Assets\Store\Square44x44Logo.png" Description="ms-resource:AppDisplayDescription" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Unicord 1.9b" Square150x150Logo="Assets\Store\Square150x150Logo.png" Square44x44Logo="Assets\Store\Square44x44Logo.png" Description="ms-resource:AppDisplayDescription" BackgroundColor="transparent">
         <uap:LockScreen Notification="badge" BadgeLogo="Assets\Store\BadgeLogo.png" />
         <uap:DefaultTile Wide310x150Logo="Assets\Store\Wide310x150Logo.png" Square310x310Logo="Assets\Store\LargeTile.png" Square71x71Logo="Assets\Store\SmallTile.png" ShortName="Unicord">
           <uap:ShowNameOnTiles>
@@ -38,6 +38,8 @@
         <uap:SplashScreen Image="Assets\Store\SplashScreen.png" BackgroundColor="#7289DA" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
+          <uap:Rotation Preference="landscape"/>
+          <uap:Rotation Preference="landscapeFlipped"/>
         </uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>

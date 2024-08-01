@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.4</TargetFrameworks>
     <AssemblyName>NeoSmart.Unicode</AssemblyName>
     <RootNamespace>NeoSmart.Unicode</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>

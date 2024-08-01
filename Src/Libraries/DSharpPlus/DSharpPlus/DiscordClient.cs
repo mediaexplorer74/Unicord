@@ -2121,7 +2121,7 @@ namespace DSharpPlus
                 }
             };
 
-            System.Diagnostics.Trace.WriteLine($"Requesting {usersToSync.Count()} members");
+            System.Diagnostics.Debug.WriteLine($"Requesting {usersToSync.Count()} members");
 
             var guild_syncstr = JsonConvert.SerializeObject(request);
             await _webSocketClient.SendMessageAsync(guild_syncstr);

@@ -153,10 +153,11 @@ namespace Unicord.Universal.Services
 
         private void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            if (_navigationStack.TryPop(out var ev))
-            {
-                ev.action(ev);
-            }
+            //TODO
+            //if (_navigationStack.TryPop(out var ev))
+            //{
+            //    ev.action(ev);
+            //}
         }
     }
 }

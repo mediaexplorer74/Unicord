@@ -68,7 +68,9 @@ namespace DSharpPlus.Net.Udp
             this.TokenSource.Cancel();
 
             try
-            { this.Client.Close(); }
+            { 
+                this.Client.Dispose(); 
+            }
             catch (Exception) { }
 
             // dequeue all the packets

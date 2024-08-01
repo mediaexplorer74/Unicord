@@ -493,8 +493,10 @@ namespace Unicord.Universal
         /// <summary>
         /// The accent colour for your theme, used behind <see cref="DisplayLogo"/>
         /// </summary>
+        /// 
+        //System.Drawing.Color
         [JsonProperty("display_colour")]
-        public System.Drawing.Color DisplayColour { get; set; }
+        public Color DisplayColour { get; set; }
 
         /// <summary>
         /// A path to a logo for your theme, relative to the root of 
