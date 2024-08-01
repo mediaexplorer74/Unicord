@@ -6,6 +6,7 @@ A free, open source Discord Client for Windows 10 and Windows 10 Mobile, that tr
 
 ## Screenshot(s)
 ![Win11](Images/shot01.png)
+![Win11](Images/shot02.png)
 
 [![Build Status](https://dev.azure.com/WanKerrCoLtd/Unicord/_apis/build/status/WamWooWam.Unicord?branchName=master)](https://dev.azure.com/WanKerrCoLtd/Unicord/_build/latest?definitionId=4&branchName=master)
 
